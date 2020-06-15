@@ -11,9 +11,9 @@ with open('morseCode.json', 'r') as file:
 with open('diacritics.json', 'r') as file:
     diacriticsDict = json.load(file)
 
-#TODO check that input is not longer than 80 char
-
 request = input('Vložte větu, kterou chcete převést do morseova kódu: ')
+while len(request) > 80:
+    request = input('Zadaný text ja na telegram moc dlouhý. Maximální délka telegramu je 80 znaků')
 letters = list(request)
 
 #remove diacritics
