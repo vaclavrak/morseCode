@@ -11,16 +11,22 @@ with open('morseCode.json', 'r') as file:
 with open('diacritics.json', 'r') as file:
     diacriticsDict = json.load(file)
 
-#TODO check that input is not longer than 80 char
+telegram = list() # empty list to insert morse code in
+message = input('Vložte větu, kterou chcete převést do morseova kódu: ')
+while len(message) > 80:
+    message = input('Zadaný text ja na telegram moc dlouhý. Maximální délka telegramu je 80 znaků')
 
-request = input('Vložte větu, kterou chcete převést do morseova kódu: ')
-letters = list(request)
+# split message into list of separate words
+words = message.split()
 
-#remove diacritics
-for index, letter in enumerate(letters):
-    if letter in diacriticsDict:
-        letters[index] = diacriticsDict[letter]
+for word in words:
+    morseWord = list()
+    for index, letter in enumerate(word):
+        if letter in diacriticsDict:  # remove diacritics
+            letter = diacriticsDict[letter]
+        morseWord.append(morseDict[letter.lower()])
+    telegram.append(morseWord)
 
-#TODO translate letters to morse code
-
-
+for word in telegram:
+    for letter in word:
+        print(letter, end='/')
