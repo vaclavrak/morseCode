@@ -11,37 +11,38 @@ with open('morseCode.json', 'r') as file:
 with open('diacritics.json', 'r') as file:
     diacriticsDict = json.load(file)
 
-telegram = list() # empty list to insert morse code in
-message = input('Vložte větu, kterou chcete převést z/do morseova kódu: ')
-
-
-def toMorse(message):  # translates given string from text to morse code
+def toMorse(message):  # translates given string from text to morse code returned as a string
     # split message into list of separate words
     words = message.split()
+    morseLetters = list()
 
     for word in words:
-        morseWord = list()
         for index, letter in enumerate(word):
             if letter in diacriticsDict:  # remove diacritics
                 letter = diacriticsDict[letter]
-            morseWord.append(morseDict[letter.lower()])
-        telegram.append(morseWord)
-
-    for word in telegram:
-        for letter in word:
-            print(letter, end='/')
+            morseLetters.append(morseDict[letter.lower()])
+    telegram = '/'.join(morseLetters)
+    return telegram
 
 def fromMorse(message): # translates given string from morse code to text
-    letters = message.split('/')
-    for letter in letters:
+    morseLetters = message.split('/')
+    alphaLetters = list()
+    for letter in morseLetters:
         for key, value in morseDict.items():
             if letter == value:
                 letter = key
+                alphaLetters.append(letter)
+    telegram = ''.join(alphaLetters)
+    return telegram
 
 if __name__ == '__main__':
-    if message[:4].isalpha():
-        while len(message) > 80:
-            message = input('Zadaný text ja na telegram moc dlouhý. Maximální délka telegramu je 80 znaků')
+    message = input('Vložte větu, kterou chcete převést z/do morseova kódu: ')
+    if message[:3].isalpha():
+        while (len(message) - message.count(' ')) > 80: # telegram neposila mezery
+            message = input('Zadaný text ja na telegram moc dlouhý. Maximální délka telegramu je 80 znaků bez mezer')
         print(toMorse(message))
 
+    if message[0] in ['*', '-']:
+        len(message) > 80:
+        print(fromMorse(message))
 
