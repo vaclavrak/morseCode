@@ -18,7 +18,8 @@ def toMorse(message):  # translates given string from text to morse code returne
 
     for word in words:
         for index, letter in enumerate(word):
-            if letter in diacriticsDict:  # remove diacritics
+            # remove diacritics
+            if letter in diacriticsDict:
                 letter = diacriticsDict[letter]
             morseLetters.append(morseDict[letter.lower()])
     telegram = '/'.join(morseLetters)
@@ -43,6 +44,6 @@ if __name__ == '__main__':
         print(toMorse(message))
 
     if message[0] in ['*', '-']:
-        len(message) > 80:
-        print(fromMorse(message))
+        if len(message) > 80:
+            print(fromMorse(message))
 
