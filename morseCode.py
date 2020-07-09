@@ -1,4 +1,3 @@
-#! python
 '''
 morseCode.py simulates a telegram machine, i.e. translates a string no longer than 80 char into morse code
 '''
