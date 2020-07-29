@@ -27,12 +27,10 @@ def web_page(zprava = ""):
     </body>
     </html>"""
 
-
     return html
 
+
 if __name__ == "__main__":
-
-
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind(('', 80))
     s.listen(5)
@@ -42,23 +40,29 @@ if __name__ == "__main__":
     conn.send(response)
     while True:
         print('Got a connection from %s' % str(addr))
+        hlavicky = ""
+        telo = ""
         while True:
-            zprava = ""
-            request = conn.recv(8000)
-            for ln in request.decode("ascii").split("\n"):
-                print(ln)
-            if request == b"":
-                print("prazdny radek, koncim")
+            odpoved = conn.recv(1024)
+            hlavicky += odpoved.decode("ascii")
+            if odpoved == b"" or len(odpoved) < 1024:
                 break
-            for ln in request.decode("ascii").split("\n"):
-                print(ln)
-                if ln[:len('text=')] == "text=":
-                    zprava = ln[len("text="):]
-                    print("Mame zpravu!!! jdeme blikat!!!", zprava)
-                    zablikej_morseovkou(zprava)
-                    print("Dolikano jest")
-        response = web_page(zprava)
-        conn.send(response)
-        conn.close()
 
+        while True:
+            odpoved = conn.recv(1024)
+            telo += odpoved.decode("ascii")
+            if odpoved == b"" or len(odpoved) < 1024:
+                break
 
+        for ln in hlavicky.split("\n"):
+            print(ln)
+
+        for ln in telo.split("\n"):
+            print(ln)
+            if ln[:len('text=')] == "text=":
+                zprava = ln[len("text="):]
+                print("Mame zpravu, jdeme blikat `{zprava}`".format(zprava=zprava))
+                zablikej_morseovkou(zprava)
+                print("Doblikano jest")
+
+    conn.close()
