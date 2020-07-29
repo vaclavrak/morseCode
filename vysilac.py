@@ -6,17 +6,17 @@ import machine, time
 
 from morseCode import toMorse
 
-def preloz_signal(telegram):
+def zablikej_morseovkou(zprava):
     '''
     prelozi řetězec do světelných signálu
     :param telegram: řetězec
     :return: vyšle zadaný řetězec morseovkou skrz kontakt D1 na vývojové desce ESP8266
     '''
     # preklad do morseovky
-    morseovka = toMorse(telegram)
+    morseovka = toMorse(zprava)
 
-    # preklad do blikani
-    pin = machine.Pin(5, machine.Pin.OUT)
+    # preklad do blikani (interni je 2)
+    pin = machine.Pin(2, machine.Pin.OUT)
 
     # nastavení trvání tečky(*), čárky(-), a mezery mezi slovama(/)
     znakyNaCas = {
@@ -31,11 +31,12 @@ def preloz_signal(telegram):
         if znak == '/':
             time.sleep(znakyNaCas[znak])
             continue
-        pin.on()
-        time.sleep(znakyNaCas[znak])
+        # interni dioda sviti pri OFF
         pin.off()
+        # pin.on()
+        time.sleep(znakyNaCas[znak])
+        pin.on()
+        # pin.off()
         time.sleep(0.2)
 
-while True:
-    preloz_signal(input())
 
